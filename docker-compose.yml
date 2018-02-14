@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  slides:
+    image: haydenbr/docker-for-javascript-developers
+    ports:
+      - 3000:3000
+    volumes:
+      - ./dist:/app/dist
+      - ./jsconfig.json:/app/jsconfig.json
+      - ./package.json:/app/package.json
+      - ./postcss.config.js:/app/postcss.config.js
+      - ./src:/app/src
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tslint.json:/app/tslint.json
+      - ./webpack:/app/webpack
+      

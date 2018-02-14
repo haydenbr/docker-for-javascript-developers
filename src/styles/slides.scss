@@ -1,0 +1,12 @@
+section {
+	&.content-slide {
+		text-align: left;
+		top: 20px !important;
+	}
+
+	&.title-slide {
+		color: $ubt-gray;
+		text-align: left;
+		top: 0 !important;
+	}
+}

@@ -1,0 +1,48 @@
+{
+  "name": "docker-for-javascript-developers",
+  "version": "0.0.0",
+  "description": "Slide for Docker for JavaScript Developers presentation",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "webpack --config ./webpack/webpack.dev.js",
+    "clean": "rimraf dist/*",
+    "serve": "webpack-dev-server --config ./webpack/webpack.dev.js --port 3000 --host 0.0.0.0",
+    "start": "docker-compose up"
+  },
+  "dockerHubRepository": "haydenbr/docker-for-javascript-developers",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haydenbr/docker-for-javascript-developers"
+  },
+  "author": "haydenbr",
+  "license": "MIT",
+  "devDependencies": {
+    "ajv": "^5.0.0",
+    "autoprefixer": "^7.2.6",
+    "css-loader": "^0.28.9",
+    "extract-loader": "^1.0.2",
+    "file-loader": "^1.1.6",
+    "fork-ts-checker-webpack-plugin": "^0.3.0",
+    "html-loader": "^0.5.5",
+    "imagemin-webpack-plugin": "^2.0.0",
+    "node-sass": "^4.7.2",
+    "postcss": "^6.0.17",
+    "postcss-loader": "^2.1.0",
+    "rimraf": "^2.6.2",
+    "sass-loader": "^6.0.6",
+    "source-map": "^0.7.0",
+    "ts-loader": "^3.5.0",
+    "tslint": "^5.9.1",
+    "tslint-eslint-rules": "^4.1.1",
+    "typescript": "^2.7.1",
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1",
+    "webpack-merge": "^4.1.1",
+    "write-file-webpack-plugin": "^4.2.0"
+  },
+  "dependencies": {
+    "highlight.js": "^9.12.0",
+    "reveal.js": "3.6.0"
+  }
+}
