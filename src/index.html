@@ -7,8 +7,14 @@
     <title>TypeScript - Reveal.js - Docker</title>
 
     <link rel="stylesheet" href="main.css">
+
+    <script type="text/javascript" src="plugin/markdown/marked.js"></script>
+    <script type="text/javascript" src="plugin/highlight/highlight.js"></script>
+    <script type="text/javascript" src="plugin/notes/notes.js"></script>
   </head>
   <body>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
     <script src="main.js"></script>
 
     <div class="reveal">
@@ -36,7 +42,6 @@
         </section>
         <section
           class="content-slide"
-          data-vertical-align-top
           data-background-image="./assets/images/header-footer-content.png"
         >
           <h2>Cooooooooool kids</h2>
@@ -48,6 +53,30 @@
             <li class="fragment">bob is cool</li>
             <li class="fragment">bob is cool</li>
           </ul>
+        </section>
+
+        <section
+          class="content-slide"
+          data-background-image="./assets/images/header-footer-content.png"
+        >
+          <pre>
+            <code class="javascript" data-trim contenteditable>
+              function bob() {
+                console.log('bob is cool!');
+              }
+            </code>
+          </pre>
+
+          <aside class="notes">
+            <div> Oh hey, here's some notes</div>
+
+            Points:
+            <ul>
+              <li>Bob is cool</li>
+              <li>Bob is cool</li>
+              <li>Bob is cool</li>
+            </ul>
+          </aside>
         </section>
       </div>
     </div>

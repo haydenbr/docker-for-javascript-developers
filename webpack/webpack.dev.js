@@ -1,14 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 const config = {
 	devtool: 'inline-source-map',
 	entry: {
-		main: ['./src/main.ts']
+		main: ['./src/main.js']
 	},
 	output: {
 		filename: '[name].js',
@@ -20,12 +20,6 @@ const config = {
 	},
 	module: {
 		rules: [
-			{
-				test: /\.ts$/,
-				use: [
-					{ loader: 'ts-loader', options: { transpileOnly: true } }
-				]
-			},
 			{
 				test: /\.(scss)$/,
 				use: [
@@ -60,7 +54,20 @@ const config = {
 	},
 	plugins: [
 		new WriteFilePlugin(),
-		new ForkTsCheckerWebpackPlugin({ tslint: true })
+		new CopyWebpackPlugin([
+			{
+				from: path.resolve(__dirname, '..', 'node_modules', 'reveal.js', 'plugin'),
+				to: path.resolve(__dirname, '..', 'dist', 'plugin')
+			},
+			{
+				from: path.resolve(__dirname, '..', 'node_modules', 'reveal.js', 'lib', 'js', 'head.min.js'),
+				to: path.resolve(__dirname, '..', 'dist', 'lib', 'js', 'head.min.js')
+			},
+			{
+				from: path.resolve(__dirname, '..', 'node_modules', 'reveal.js', 'js', 'reveal.js'),
+				to: path.resolve(__dirname, '..', 'dist', 'js', 'reveal.js')
+			}
+		])
 	],
 	devServer: {
 		contentBase: 'dist',
