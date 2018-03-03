@@ -43,8 +43,9 @@
           data-background-image="./assets/images/header-footer-content.png"
         >
           <div class="page-title">Before we get started</div>
-          <div>Install Docker!!</div>
-          <div><a target="_blank" href="https://www.docker.com/community-edition">docker.com/community-edition</a></div>
+          <div>Install Docker!! <a target="_blank" href="https://www.docker.com/community-edition">docker.com/community-edition</a></div>
+          <br>
+          <div>Legacy Support <a target="_blank" href="https://docs.docker.com/toolbox/overview">docs.docker.com/toolbox/overview</a></div>
           <br>
           <div>Windows users, please switch to Linux containers</div>
           <img src="./assets/images/switch-to-linux-containers.png">
@@ -77,7 +78,8 @@
             <ul>
               <li>lots of content</li>
               <li>there will be a video</li>
-              <li>questions!!!</li>
+              <li>questions - relevant</li>
+              <li>memes: silly American</li>
             </ul>
           </aside>
         </section>
@@ -89,16 +91,18 @@
           <div class="page-title">About me</div>
           <ul>
             <li>Richmond, VA - RVA</li>
-            <li>Software Engineer at Unboxed Technology</li>
+            <li>Software Engineer at <a target="_blank" href="https://www.unboxedtechnology.com/dev-talks/">Unboxed Technology</a></li>
+            <li>I play with code for fun</li>
             <li class="fragment">Love me some South Indian food!</li>
-
             <br>
             <a target="_blank" href="https://twitter.com/hayden_dev">@hayden_dev</a>
           </ul>
 
           <aside class="notes">
             <ul>
-              <li>Unboxed: L&D - Dev Talks</li>
+              <li>Unboxed: unrelated to tech</li>
+              <li>Unboxed: L&D software products</li>
+              <li>Unboxed: Dev Talks</li>
               <li>Primarily JavaScript</li>
               <li>irrelevant info</li>
               <li>How did I get started with Docker?</li>
@@ -129,41 +133,7 @@
             <ul>
               <li>Nick, my boss, let me experiment</li>
               <li>Sha, past co worker, original creator of example app</li>
-              <li>secret identity</li>
               <li>Docker captains, a lot of great content</li>
-            </ul>
-          </aside>
-        </section>
-
-        <section data-background-image="./assets/images/dark-bg.png">
-          <div class="section-title">Why Docker?</div>
-        </section>
-
-        <section
-          class="content-slide"
-          data-background-image="./assets/images/header-footer-content.png"
-        >
-          <div class="page-title">Why Docker?</div>
-          <div>Docker is disrupting the norm</div>
-          <div>Multple use cases:</div>
-          <ul>
-            <li>Portability</li>
-            <li>Agility</li>
-            <li>Efficiency</li>
-          </ul>
-
-          <img
-            width="400px"
-            style="float: right;"
-            src="./assets/images/well-it-worked-on-my-machine-someone-elses-problem-now.jpg"
-          >
-
-          <aside class="notes">
-            <ul>
-              <li>Portability: works on my machine</li>
-              <li>develop, ship, run anywhere ... almost</li>
-              <li>agility: quicker to from dev to depoloyment, scaling</li>
-              <li>efficient: dev time and computing resources</li>
             </ul>
           </aside>
         </section>
@@ -186,8 +156,60 @@
 
           <aside class="notes">
             <ul>
+              <li>specific purpose: app, service, tasks</li>
               <li>Docker as a technology</li>
+              <li>container platform</li>
+              <li>other container platforms</li>
               <li>Docker as a company</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section
+          class="content-slide"
+          data-background-image="./assets/images/header-footer-content.png"
+        >
+          <div class="page-title">Why should I learn Docker?</div>
+
+          <blockquote>“Gartner predicts that, by 2020, more than 50% of global organizations will be running containerized applications in production, up from less than 20% today.”</blockquote>
+          <a href="https://www.gartner.com/smarterwithgartner/6-best-practices-for-creating-a-container-platform-strategy/">source</a>
+
+          <aside class="notes">
+            <ul>
+              <li>Biggest impact on Dev Ops</li>
+              <li>Docker brings dev and ops closer together</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section
+          class="content-slide"
+          data-background-image="./assets/images/header-footer-content.png"
+        >
+          <div class="page-title">Why Docker?</div>
+
+          <div>Docker is disrupting the norm</div>
+          <div>Multple use cases</div>
+          <ul>
+            <li>Portability</li>
+            <li>Agility</li>
+            <li>Efficiency</li>
+          </ul>
+
+          <img
+            width="400px"
+            style="float: right;"
+            src="./assets/images/well-it-worked-on-my-machine-someone-elses-problem-now.jpg"
+          >
+
+          <aside class="notes">
+            <ul>
+              <li>typical use cases: run apps in prod, microservices</li>
+              <li>atypical use cases</li>
+              <li>Portability: works on my machine</li>
+              <li>develop, ship, run anywhere, regardless of architecture ... almost</li>
+              <li>agility: dev to depoloyment, scaling</li>
+              <li>efficient: computing resources</li>
             </ul>
           </aside>
         </section>
@@ -271,8 +293,9 @@
             <ul>
               <li>physical partitions require time</li>
               <li>container: lightweight VM?</li>
-              <li>container: virtual operating system</li>
+              <li>container: virtual OS</li>
               <li>containers share same computing resources</li>
+              <li></li>
             </ul>
           </aside>
         </section>
@@ -342,6 +365,7 @@
               <li>container env isolated from others and host</li>
               <li>linux container on linux host</li>
               <li>container is abstraction of kernel primitives</li>
+              <li>linux container on non-linux</li>
             </ul>
           </aside>
         </section>
@@ -394,9 +418,14 @@
 
           <aside class="notes">
             <ul>
+              <li>image registry</li>
               <li>like github or npm</li>
+              <li>repos</li>
               <li>official vs. non-official</li>
-              <li>naming convention</li>
+              <li>image tags: versioning</li>
+              <li>latest tag</li>
+              <li>repo naming convention</li>
+              <li>Docker store</li>
             </ul>
           </aside>
         </section>
@@ -407,9 +436,13 @@
 
           <aside class="notes">
             <ul>
+              <li>same ux cross-platform</li>
+              <li>linux case</li>
               <li>Client: cli</li>
               <li>Daemon: manages docker objects</li>
-              <li>same ux cross-platform</li>
+              <li>containerd: container run time, lifecycle</li>
+              <li>containerd: exposes gRPC api to daemon</li>
+              <li>containerd uses runc to create containers</li>
             </ul>
           </aside>
         </section>
@@ -485,7 +518,8 @@
 
           <pre>
             <code class="bash" data-trim contenteditable>
-              alias 🙏="rm -rf node_modules/ && rm -f package-lock.json && npm install"
+              # alias npmplease🙏
+              rm -rf node_modules/ && rm -f package-lock.json && npm install
             </code>
           </pre>
         </section>
@@ -625,7 +659,15 @@
             <li>Adding new dependencies</li>
             <li>Running sync scripts</li>
             <li>Language support</li>
+            <li>Building locally</li>
           </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>dont know about Docker</li>
+              <li>ideal sync setup</li>
+            </ul>
+          </aside>
         </section>
 
         <section data-background-image="./assets/images/dark-bg.png">

@@ -1,30 +1,53 @@
 ## Containers
 
+```bash
 docker container run hello-world
-docker container run -it ubuntu bash
+# what just happened?
+# docker run
 
-docker container run --publish 8080:80 nginx
-docker container run -d --publish 8080:80 nginx
-docker container run -i -t --publish 8080:80 --name nginx-server nginx
+docker container run -it --name ubuntu-bash ubuntu bash
+ps -eaf # in ubuntu
 
 docker container ls
 docker container ls -a
+docker ps
+```
 
-docker container stop
-docker container start
-docker container restart
+- container names
+- docker container run: create container 
 
-docker container rm
+```bash
+docker container run -i -t --publish 8080:80 --name nginx-server nginx
+docker container rm nginx-server
+
+docker container run -d --publish 8080:80 --name nginx-server nginx
+docker container logs nginx-server
+
+docker container stop nginx-server
+docker container start nginx-server
+docker container restart nginx-server # stops then starts container
+
+docker container stop nginx-server
+docker container rm nginx-server
+```
 
 ## Images
 
+- Main task of Docker is writing images
+- Image built from Dockerfile
+- start with a base image (scratch)
+- One layer for every line
+- learning tip: study Dockerfiles from official repos and Docker Captains
+
+```bash
 docker container run -it node:8.9.4 bash
+```
 
 ```Dockerfile
 FROM node:8.9.4
 
-RUN mkdir /app
-WORKDIR /app
+RUN mkdir /opt/app
+WORKDIR /opt/app
 
 # ENV vs ARG
 ENV NODE_ENV=development
@@ -32,7 +55,9 @@ ENV NODE_ENV=development
 # COPY vs ADD
 COPY package.json package.json
 COPY yarn.lock yarn.lock
+# (command / change) the file system
 RUN yarn
+# we'll do something different with this later
 COPY tsconfig.json tsconfig.json
 COPY tslint.json tslint.json
 COPY .angular-cli.json .angular-cli.json
@@ -44,60 +69,82 @@ EXPOSE 4200
 ENTRYPOINT [ "yarn", "serve" ]
 ```
 
-- write until COPY yarn.lock
-- docker build -t bob-is-cool .
+```bash
+# build after COPY yarn.lock yarn.lock
+docker build -t haydenbr/bob-is-cool .
 
-	- build context: some portion of host fs that daemon can access to create image
-	-f option
+# build context
+# -f option
+
+# built after COPY src src
+docker build -t haydenbr/bob-is-cool .
+```
 
 - finish and build the whole thing
 - docker run it!
 - demonstrate cache
+	-- change src, rebuild
+	-- change package.json, rebuild
 
-	- change src, rebuild
-	- change package.json, rebuild
+## Mounts and Volumes
 
-- learning tip: study Dockerfiles from official repos and Docker Captains
+- Plug directories into container
+- bind mount: mount files from host machine
+- volumes: mount volumes from host machine in Docker managed storage
 
-## Volumes
+### Mounts
 
+```bash
 mkdir bob
-docker container run -v $(pwd)/bob:/bob ubuntu bash
+docker container run --mount src=$(pwd)/bob,dst=/bob,type=bind ubuntu bash
 
-# echo into bob.txt in bob
-# in new tab, look at bob.txt
+# in container
+echo 'Bob is cool!' >> bob.txt
 
+# in new tab, on host
+cat bob/bob.txt
 docker container rm -v
+```
 
-/////////////////////////////////////////////
+```bash
+docker container run -it -p 4200:4200 --mount src=$(pwd)/src,dst=/opt/app/src,type=bind haydenbr/bob-is-cool
+```
 
-Run bob is cool with -v src
-
-/////////////////////////////////////////////
-
+```bash
 docker volume create bob
-docker container run --mount source=bob,target=/bob ubuntu bash
-docker container run --mount source=bob,target=/bob alpine sh
+docker container run --mount src=bob,dst=/bob,type=volume ubuntu bash
+docker container run --mount src=bob,dst=/bob,type=volume alpine sh
+```
 
+```bash
 docker volume create mongo-db
 docker volume create mongo-configdb
-docker run -d -p 27017:27017 --mount source=mongo-db,target=/data/db --mount source=mongo-configdb,target=/data/configdb --name mongod mongo:3.6.2-jessie mongod
+docker run -d -p 27017:27017 --mount src=mongo-db,dst=/data/db,type=volume --mount src=mongo-configdb,dst=/data/configdb,type=volume --name mongod mongo:3.6.2-jessie mongod
 docker run --name mongo-shell -it --link mongod mongo:3.6.2-jessie bash
 mongo $MONGOD_PORT_27017_TCP_ADDR:$MONGOD_PORT_27017_TCP_PORT
-
--- kill and remove mongod container
--- run new mongod container
--- connect via robo mongo
--- data is still there!
+# read write from shell
+# read write from robo mongo
+# kill mongod and try to read
+```
 
 ## Under the hood
 
+### Control groups
+
+```bash
 docker run -it --memory 64m --memory-swap 64m ubuntu bash
 # docker stats in new tab
 :(){ :|: & };:
+```
 
+### Union file system
+
+```bash
 docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh
-docker inspect bob-is-cool
+docker inspect haydenbr/bob-is-cool
+
+# ls each of the image layers
+```
 
 ```Dockerfile
 FROM node:8.9.4
@@ -105,12 +152,104 @@ LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
 
 ENV NODE_ENV=development
 
-RUN mkdir /app
-WORKDIR /app
-ADD . /app
+RUN apt-get update
+RUN apt-get install ncftp
+
+RUN mkdir /opt/app
+WORKDIR /opt/app
+ADD . /opt/app
 RUN yarn
 
 EXPOSE 8100 35729 53703
+```
+
+```.dockerignore
+.git
+node_modules
+```
+
+```Dockerfile
+FROM node:8.9.4
+LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
+
+ENV NODE_ENV=development
+
+RUN apt-get update
+RUN apt-get install ncftp
+
+RUN mkdir /opt/app
+WORKDIR /opt/app
+ADD package.json package.json
+RUN yarn
+ADD . /opt/app
+
+EXPOSE 8100 35729 53703
+ENTRYPOINT [ "npm", "run", "serve" ]
+```
+
+```Dockerfile
+FROM node:8.9.4
+LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
+
+ENV NODE_ENV=development
+
+RUN apt-get update
+RUN apt-get install ncftp
+
+RUN mkdir /opt/app
+WORKDIR /opt/app
+ADD docker/package.json package.json
+RUN yarn
+
+ADD ionic.config.json ionic.config.json
+ADD docker/config.xml config.xml
+ADD /scripts /scripts
+ADD /webpack /webpack
+ADD tslint.json tslint.json
+ADD tsconfig.json tsconfig.json
+ADD package.json package.json
+ADD config.xml config.xml
+
+EXPOSE 8100 35729 53703
+ENTRYPOINT [ "npm", "run", "serve" ]
+```
+
+```Dockerfile
+FROM node:8.9.4
+LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
+
+ENV NODE_ENV=development
+
+RUN apt-get update
+RUN apt-get install ncftp
+
+RUN mkdir /opt/app
+WORKDIR /opt/app
+ADD docker/package.json package.json
+RUN yarn
+
+# for live reload
+EXPOSE 8100 35729 53703
+ENTRYPOINT [ "npm", "run", "serve" ]
+```
+
+```Dockerfile
+FROM node:8.9.4-alpine
+LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
+
+ENV NODE_ENV=development
+
+RUN mkdir /opt/app && \
+		apk update && \
+		apk add --no-cache ncftp=3.2.6-r1 && \
+		rm -r /var/cache/apk
+WORKDIR /opt/app	
+
+ADD docker/package.json package.json
+RUN yarn && yarn cache clean
+
+EXPOSE 8100 35729 53703
+ENTRYPOINT [ "npm", "run", "serve" ]
 ```
 
 ```.dockerignore
@@ -128,85 +267,4 @@ scripts
 src
 webpack
 www
-```
-
-```Dockerfile
-FROM node:8.9.4
-LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
-
-ENV NODE_ENV=development
-
-RUN mkdir /app
-WORKDIR /app
-ADD package.json /app/package.json
-RUN yarn
-ADD . /app
-
-EXPOSE 8100 35729 53703
-ENTRYPOINT [ "npm", "run", "serve" ]
-```
-
-```Dockerfile
-FROM node:8.9.4
-LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
-
-ENV NODE_ENV=development
-
-RUN apt-get update
-RUN apt-get install ncftp
-
-RUN mkdir /app
-WORKDIR /app
-ADD docker/package.json /app/package.json
-RUN yarn
-
-ADD ionic.config.json /app/ionic.config.json
-ADD docker/config.xml /app/config.xml
-ADD /scripts /app/scripts
-ADD /webpack /app/webpack
-ADD tslint.json /app/tslint.json
-ADD tsconfig.json /app/tsconfig.json
-ADD package.json /app/package.json
-ADD config.xml /app/config.xml
-
-EXPOSE 8100 35729 53703
-ENTRYPOINT [ "npm", "run", "serve" ]
-```
-
-```Dockerfile
-FROM node:8.9.4
-LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
-
-ENV NODE_ENV=development
-
-RUN apt-get update
-RUN apt-get install ncftp
-
-RUN mkdir /app
-WORKDIR /app
-ADD docker/package.json /app/package.json
-RUN yarn
-
-# for live reload
-EXPOSE 8100 35729 53703
-ENTRYPOINT [ "npm", "run", "serve" ]
-```
-
-```Dockerfile
-FROM node:8.9.4-alpine
-LABEL maintainer="Unboxed Technology LLC, https://unboxedtechnology.com"
-
-ENV NODE_ENV=development
-
-RUN mkdir /app && \
-		apk update && \
-		apk add --no-cache ncftp=3.2.6-r1 && \
-		rm -r /var/cache/apk
-WORKDIR /app
-
-ADD docker/package.json package.json
-RUN yarn && yarn cache clean
-
-EXPOSE 8100 35729 53703
-ENTRYPOINT [ "npm", "run", "serve" ]
 ```
