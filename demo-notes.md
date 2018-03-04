@@ -1,3 +1,7 @@
+```bash
+docker version
+```
+
 ## Containers
 
 ```bash
@@ -37,6 +41,7 @@ docker container rm nginx-server
 - Image built from Dockerfile
 - start with a base image (scratch)
 - One layer for every line
+- rebuild: use cache
 - learning tip: study Dockerfiles from official repos and Docker Captains
 
 ```bash
@@ -49,14 +54,18 @@ FROM node:8.9.4
 RUN mkdir /opt/app
 WORKDIR /opt/app
 
-# ENV vs ARG
+# ENV variables like export
 ENV NODE_ENV=development
 
 # COPY vs ADD
+# copy from build context, into
 COPY package.json package.json
 COPY yarn.lock yarn.lock
-# (command / change) the file system
+
+# RUN (command / change) the file system
+# intermediate containers are used to build images
 RUN yarn
+
 # we'll do something different with this later
 COPY tsconfig.json tsconfig.json
 COPY tslint.json tslint.json
@@ -142,8 +151,11 @@ docker run -it --memory 64m --memory-swap 64m ubuntu bash
 ```bash
 docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh
 docker inspect haydenbr/bob-is-cool
-
 # ls each of the image layers
+
+docker run -it --name copy-on-write ubuntu bash
+echo 'Bob is cool!' >> bob.txt
+# inspect the container and ls the upperdir
 ```
 
 ```Dockerfile
@@ -268,3 +280,5 @@ src
 webpack
 www
 ```
+
+- look at the bump script: copy dependencies

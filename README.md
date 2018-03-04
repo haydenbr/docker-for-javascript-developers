@@ -1,3 +1,11 @@
-Just trying to get up an running with reveal.js in typescript.
+# Docker for JavaScript Developers
 
-This is admitedly a hackjob. But it's only for the sake of quickly building out a presentation. Will figure out the issues between @types/reveal, reveal.js, and TS later. For now, it's good enough. #priorities
+You can either run the slides directly on your machine or inside a container.
+
+To run the slides directly on your machine, `yarn install` and then `yarn serve`.
+
+To run the slides from a docker container, you can either `yarn start` or `docker-compose up`.
+
+You can check out the demo-notes.md to see the hands on examples.
+
+The slides use [Reveal.js](https://revealjs.com/#/).
