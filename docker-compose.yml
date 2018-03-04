@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   slides:
-    image: haydenbr/docker-for-javascript-developers
+    image: haydenbr/docker-for-javascript-developers:delhi
     ports:
       - 3000:3000
     volumes:
